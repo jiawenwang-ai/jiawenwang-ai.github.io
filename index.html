@@ -4,61 +4,466 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Jiawen Wang | AI Application Developer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <style>
-  :root { --blue:#2563eb; --gray:#6b7280; }
-  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:#111; background:#fff; }
-  .wrap { max-width:960px; margin:auto; padding:48px 16px 64px; }
-  h1 { font-size:28px; margin-bottom:4px; }
-  .sub { color:var(--gray); margin:6px 0 18px; }
-  .tags span { display:inline-block; background:#f3f4f6; border-radius:999px; padding:4px 10px; margin:2px 4px 2px 0; font-size:13px; color:#374151; }
-  h2 { font-size:20px; margin:32px 0 12px; border-bottom:1px solid #eee; padding-bottom:6px; }
-  .card { border:1px solid #e5e7eb; border-radius:12px; padding:16px; margin:12px 0; }
-  .card h3 { margin:0 0 6px; }
-  .card p { margin:6px 0; line-height:1.6; }
-  a { color:var(--blue); text-decoration:none; }
-  a:hover { text-decoration:underline; }
-  footer { margin-top:48px; color:var(--gray); font-size:13px; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card-bg: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.06);
+    --card-hover-bg: rgba(255,255,255,0.06);
+    --text: #e4e4ec;
+    --text-dim: #8888a0;
+    --text-muted: #5a5a72;
+    --accent: #6c5ce7;
+    --accent2: #00cec9;
+    --accent3: #fd79a8;
+    --accent4: #fdcb6e;
+    --accent5: #55efc4;
+    --accent-glow: rgba(108,92,231,0.25);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.25;
+    background-image:
+      linear-gradient(rgba(108,92,231,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,92,231,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 70%);
+  }
+
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 12s ease-in-out infinite;
+  }
+  .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -15%; left: -10%; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: -10%; right: -8%; animation-delay: -4s; animation-duration: 15s; }
+  .orb-3 { width: 350px; height: 350px; background: var(--accent3); top: 40%; right: 30%; animation-delay: -8s; animation-duration: 18s; }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    25% { transform: translate(40px,-30px) scale(1.08); }
+    50% { transform: translate(-20px,20px) scale(0.94); }
+    75% { transform: translate(-30px,-10px) scale(1.05); }
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    box-shadow: 0 0 40px var(--accent-glow), 0 8px 32px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .avatar::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    z-index: -1;
+    animation: avatarSpin 4s linear infinite;
+    filter: blur(8px);
+    opacity: 0.5;
+  }
+  @keyframes avatarSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #e4e4ec 0%, #c4c4d8 40%, var(--accent2) 70%, var(--accent4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sub {
+    font-size: 17px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .sub::after {
+    content: '|';
+    display: inline-block;
+    color: var(--accent2);
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .social-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .social-row a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    font-size: 18px;
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  .social-row a:hover {
+    color: #fff;
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.15);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: translateY(-2px);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .tags span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    transition: var(--transition);
+    cursor: default;
+  }
+  .tags span:hover {
+    color: #fff;
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 56px 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+  h2 i { font-size: 20px; color: var(--accent); }
+  h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--card-border), transparent);
+    margin-left: 12px;
+  }
+
+  .projects-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: var(--transition);
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(108,92,231,0.06), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .card:hover::before { opacity: 1; }
+  .card:hover {
+    border-color: rgba(108,92,231,0.3);
+    background: var(--card-hover-bg);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(108,92,231,0.1);
+  }
+
+  .card-icon { font-size: 32px; margin-bottom: 12px; display: inline-block; }
+
+  .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #fff; letter-spacing: -0.2px; }
+
+  .card p { color: var(--text-dim); font-size: 14.5px; line-height: 1.75; margin-bottom: 14px; }
+
+  .card-links { display: flex; gap: 16px; flex-wrap: wrap; }
+  .card-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(108,92,231,0.1);
+    border: 1px solid rgba(108,92,231,0.2);
+    transition: var(--transition);
+  }
+  .card-links a:hover {
+    background: rgba(108,92,231,0.2);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 16px var(--accent-glow);
+  }
+
+  .contact-section { margin-top: 8px; }
+
+  .contact-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: center;
+    transition: var(--transition);
+  }
+  .contact-card:hover {
+    border-color: rgba(108,92,231,0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-dim);
+    font-size: 14.5px;
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  .contact-item i { font-size: 18px; color: var(--accent); }
+  .contact-item:hover { color: #fff; }
+
+  footer {
+    margin-top: 56px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  footer a { color: var(--text-dim); text-decoration: none; transition: var(--transition); }
+  footer a:hover { color: var(--accent2); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 16px 60px; }
+    .hero h1 { font-size: 30px; }
+    .avatar { width: 72px; height: 72px; font-size: 28px; }
+    .card { padding: 18px; }
+    .contact-card { gap: 16px; flex-direction: column; align-items: flex-start; }
+    .social-row { gap: 12px; }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp 0.8s ease-out; }
+  .tags { animation: fadeUp 0.8s 0.1s ease-out both; }
+  .projects-grid .card:nth-child(1) { animation: fadeUp 0.6s 0.2s ease-out both; }
+  .projects-grid .card:nth-child(2) { animation: fadeUp 0.6s 0.3s ease-out both; }
+  .projects-grid .card:nth-child(3) { animation: fadeUp 0.6s 0.4s ease-out both; }
+  #contact { animation: fadeUp 0.6s 0.5s ease-out both; }
 </style>
 </head>
 <body>
+
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
 <div class="wrap">
 
-<h1>王嘉文</h1>
-<div class="sub">AI Application Developer · LLM App Engineering</div>
+  <header class="hero">
+    <div class="avatar">JW</div>
+    <h1>王嘉文</h1>
+    <p class="sub">AI Application Developer · LLM App Engineering</p>
 
-<div class="tags">
-  <span>Python</span><span>FastAPI</span><span>LangChain</span>
-  <span>RAG</span><span>FAISS</span><span>Gradio/Streamlit</span>
-  <span>Git</span><span>REST API</span>
+    <div class="social-row">
+      <a href="https://github.com/jiawenwang-ai" target="_blank" title="GitHub" aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="mailto:jiawen.ai@outlook.com" title="Email" aria-label="Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+      <a href="#" title="LinkedIn" aria-label="LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a href="#" title="Twitter / X" aria-label="Twitter">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+    </div>
+
+    <div class="tags">
+      <span><i class="fab fa-python"></i> Python</span>
+      <span><i class="fas fa-bolt"></i> FastAPI</span>
+      <span><i class="fas fa-link"></i> LangChain</span>
+      <span><i class="fas fa-database"></i> RAG</span>
+      <span><i class="fas fa-search"></i> FAISS</span>
+      <span><i class="fas fa-desktop"></i> Gradio / Streamlit</span>
+      <span><i class="fab fa-git-alt"></i> Git</span>
+      <span><i class="fas fa-plug"></i> REST API</span>
+    </div>
+  </header>
+
+  <section>
+    <h2><i class="fas fa-code-branch"></i> 精选项目</h2>
+
+    <div class="projects-grid">
+      <article class="card">
+        <div class="card-icon">📄</div>
+        <h3>RAG 企业知识库问答</h3>
+        <p>
+          支持 PDF / Word 文档导入，自动分块 → 向量嵌入 → FAISS 存储 → 检索重排序 → LLM 生成。
+          输出带引用溯源的高质量答案，内置拒答边界保障可靠性。
+        </p>
+        <div class="card-links">
+          <a href="#"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+          <a href="#"><i class="fab fa-github"></i> GitHub Repo</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🤖</div>
+        <h3>Tool-use Agent（工单 / 意图路由）</h3>
+        <p>
+          基于 Function Calling 的智能 Agent 系统，自动识别用户意图并编排工具链。
+          支持流式输出与结构化 Action 返回，实现高效的工单分类与路由。
+        </p>
+        <div class="card-links">
+          <a href="#"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+          <a href="#"><i class="fab fa-github"></i> GitHub Repo</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🛠️</div>
+        <h3>AI 应用脚手架（FastAPI + UI）</h3>
+        <p>
+          开箱即用的 AI 应用启动模板：统一配置管理、结构化日志、全局错误边界、
+          速率限制、健康检查，本地一行命令即可启动。
+        </p>
+        <div class="card-links">
+          <a href="#"><i class="fab fa-github"></i> GitHub Repo</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2><i class="fas fa-paper-plane"></i> 联系方式</h2>
+
+    <div class="contact-card">
+      <a href="mailto:jiawen.ai@outlook.com" class="contact-item">
+        <i class="fas fa-envelope"></i>
+        jiawen.ai@outlook.com
+      </a>
+      <a href="mailto:jiawen@jiawenwang.com" class="contact-item">
+        <i class="fas fa-globe"></i>
+        jiawen@jiawenwang.com
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 <a href="https://github.com/jiawenwang-ai" target="_blank">github.com/jiawenwang-ai</a> — Built with <i class="fas fa-heart" style="color:#fd79a8;"></i> and code.</p>
+  </footer>
+
 </div>
 
-<h2>Projects</h2>
+<script>
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', x + '%');
+      card.style.setProperty('--mouse-y', y + '%');
+    });
+  });
+</script>
 
-<div class="card">
-  <h3>📄 RAG 企业知识库问答</h3>
-  <p>PDF/Word → chunk → embed → vector store → rerank → LLM，输出带引用的答案；支持拒答边界。</p>
-  <p>🔗 <a href="#">Live Demo</a> · <a href="#">GitHub Repo</a></p>
-</div>
-
-<div class="card">
-  <h3>🤖 Tool-use Agent（工单/意图路由）</h3>
-  <p>Function calling / tools 做意图→工具编排，流式输出 + 结构化 action 返回。</p>
-  <p>🔗 <a href="#">Live Demo</a> · <a href="#">GitHub Repo</a></p>
-</div>
-
-<div class="card">
-  <h3>🛠️ AI 应用脚手架（FastAPI + UI）</h3>
-  <p>统一配置、日志、错误边界、速率限制、健康检查，本地一键启动。</p>
-  <p>🔗 <a href="#">GitHub Repo</a></p>
-</div>
-
-<h2>Contact</h2>
-<p>📧 <a href="mailto:jiawen.ai@outlook.com">jiawen.ai@outlook.com</a></p>
-<p>📧 <a href="mailto:jiawen@jiawenwang.com">jiawen@jiawenwang.com</a></p>
-
-<footer>
-  github.com/jiawenwang-ai
-</footer>
-</div>
 </body>
 </html>
